@@ -3,10 +3,11 @@ import React, {useState} from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 
-const ConfirmEmailScreen = () => {
+const NewPasswordScreen = () => {
   const [code, setCode] = useState('')
+  const [newPassword, setNewPassword] = useState('')
 
-  const onConfirmEmailPressed = () => {
+  const onSubmitPressed = () => {
     console.warn('Confrim Email')
   }
 
@@ -14,20 +15,15 @@ const ConfirmEmailScreen = () => {
     console.warn('Sign In')
   }
 
-  const onResendCodePressed = () => {
-    console.warn('Resend Code')
-  }
-
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
-      <Text style={styles.title}>Confirm your email</Text>
+      <Text style={styles.title}>Reset your password</Text>
 
-      <CustomInput placeholder='Enter your confirmation code' value={code} setValue={setCode} />
+      <CustomInput placeholder='Code' value={code} setValue={setCode} />
+      <CustomInput placeholder='Enter your new password' value={newPassword} setValue={setNewPassword} />
 
-      <CustomButton text="Confirm Email" onPress={onConfirmEmailPressed} />
-
-      <CustomButton text="Resend Code" onPress={onResendCodePressed} type='SECONDARY' />
+      <CustomButton text="Submit " onPress={onSubmitPressed} />
 
       <CustomButton text="Back to Sign In" onPress={onSignInPressed} type='TERTIARY' />
     </View>
@@ -55,4 +51,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ConfirmEmailScreen
+export default NewPasswordScreen

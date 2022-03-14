@@ -3,10 +3,10 @@ import React, {useState} from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 
-const ConfirmEmailScreen = () => {
-  const [code, setCode] = useState('')
+const ForgotPasswordScreen = () => {
+  const [username, setUsername] = useState('')
 
-  const onConfirmEmailPressed = () => {
+  const onSendUsernamePressed = () => {
     console.warn('Confrim Email')
   }
 
@@ -14,20 +14,14 @@ const ConfirmEmailScreen = () => {
     console.warn('Sign In')
   }
 
-  const onResendCodePressed = () => {
-    console.warn('Resend Code')
-  }
-
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
-      <Text style={styles.title}>Confirm your email</Text>
+      <Text style={styles.title}>Reset your password</Text>
 
-      <CustomInput placeholder='Enter your confirmation code' value={code} setValue={setCode} />
+      <CustomInput placeholder='Username' value={username} setValue={setUsername} />
 
-      <CustomButton text="Confirm Email" onPress={onConfirmEmailPressed} />
-
-      <CustomButton text="Resend Code" onPress={onResendCodePressed} type='SECONDARY' />
+      <CustomButton text="Send" onPress={onSendUsernamePressed} />
 
       <CustomButton text="Back to Sign In" onPress={onSignInPressed} type='TERTIARY' />
     </View>
@@ -55,4 +49,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ConfirmEmailScreen
+export default ForgotPasswordScreen
