@@ -13,14 +13,14 @@ import {
   Text
 } from 'react-native';
 import Navigation from './src/navigation';
-import Amplify from 'aws-amplify';
-import { withAuthenticator } from 'aws-amplify-react-native/dist/Auth';
+import Amplify, {Auth} from 'aws-amplify';
+import { withAuthenticator, AmplifyTheme } from 'aws-amplify-react-native';
 import config from './src/aws-exports';
 
 Amplify.configure(config)
 
 const App = () => {
-  
+  // Auth.signOut()
   return (
     <SafeAreaView style={styles.root}>
       <Navigation />
@@ -70,4 +70,13 @@ const signUpConfig = {
   ],
 };
 
-export default withAuthenticator(App, {signUpConfig});
+const customTheme = {
+  ...AmplifyTheme,
+  button: {
+    ...AmplifyTheme.button,
+    backgroundColor: 'blue',
+    borderRadius: 10
+  }
+}
+
+export default withAuthenticator(App, {signUpConfig, theme: customTheme});
