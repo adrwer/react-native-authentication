@@ -49,8 +49,8 @@ const SignInScreen = () => {
       <View style={styles.root}>
       <Image source={Logo} style={[styles.logo, {height: height*0.3}]} resizeMode='contain' />
 
-      <CustomInput name="username" placeholder='Username' control={control} rules={{required: true}} />
-      <CustomInput name="password" placeholder='Password' control={control} secureTextEntry rules={{required: true}}/>
+      <CustomInput name="username" placeholder='Username' control={control} rules={{required: 'Username is required'}} />
+      <CustomInput name="password" placeholder='Password' control={control} secureTextEntry rules={{required: 'Password is Required', minLength: {value: 4, message: 'Password should exceed 3 characters'}}}/>
 
       <CustomButton text={loading ? "Loading..." : "Sign In"} onPress={handleSubmit(onSignInPressed)} />
       <CustomButton text="Forgot Password?" onPress={onForgotPasswordPressed} type='TERTIARY' />
