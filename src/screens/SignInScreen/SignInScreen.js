@@ -1,22 +1,36 @@
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Alert } from 'react-native'
 import React, {useState} from 'react'
 import Logo from '../../../assets/images/Logo_1.png'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignInButtons from '../../components/SocialSignInButtons'
 import { useNavigation } from '@react-navigation/native'
+import {Auth} from 'aws-amplify';
 
 const SignInScreen = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const {height} = useWindowDimensions()
   const navigation = useNavigation()
 
-  const onSignInPressed = () => {
-    // validate user
+  const onSignInPressed = async (data) => {
+    if (loading) {
+      return;
+    }
 
-    navigation.navigate('Home')
+    setLoading(true)
+    try {
+      const response = await Auth.signIn(data.username, data.password);
+      console.log(response);
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+    }
+    setLoading(false)
+    // // validate user
+
+    // navigation.navigate('Home')
   }
 
   const onForgotPasswordPressed = () => {
@@ -37,7 +51,7 @@ const SignInScreen = () => {
       <CustomInput placeholder='Username' value={username} setValue={setUsername} />
       <CustomInput placeholder='Password' value={password} setValue={setPassword} secureTextEntry/>
 
-      <CustomButton text="Sign In" onPress={onSignInPressed} />
+      <CustomButton text={loading ? "Loading..." : "Sign In"} onPress={onSignInPressed} />
       <CustomButton text="Forgot Password?" onPress={onForgotPasswordPressed} type='TERTIARY' />
 
       <SocialSignInButtons />
