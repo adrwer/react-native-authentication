@@ -13,7 +13,7 @@ const SignInScreen = () => {
   const {height} = useWindowDimensions()
   const navigation = useNavigation()
 
-  const {control, handleSubmit} = useForm()
+  const {control, handleSubmit, formState: {errors}} = useForm()
 
   const onSignInPressed = async (data) => {
     if (loading) {
@@ -49,8 +49,8 @@ const SignInScreen = () => {
       <View style={styles.root}>
       <Image source={Logo} style={[styles.logo, {height: height*0.3}]} resizeMode='contain' />
 
-      <CustomInput name="username" placeholder='Username' control={control} />
-      <CustomInput name="password" placeholder='Password' control={control} secureTextEntry/>
+      <CustomInput name="username" placeholder='Username' control={control} rules={{required: true}} />
+      <CustomInput name="password" placeholder='Password' control={control} secureTextEntry rules={{required: true}}/>
 
       <CustomButton text={loading ? "Loading..." : "Sign In"} onPress={handleSubmit(onSignInPressed)} />
       <CustomButton text="Forgot Password?" onPress={onForgotPasswordPressed} type='TERTIARY' />
