@@ -1,11 +1,13 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native'
 import React, {useState} from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignInButtons from '../../components/SocialSignInButtons'
 import { useNavigation } from '@react-navigation/native'
+import {Auth} from 'aws-amplify';
 
 const SignUpScreen = () => {
+  const [fullName, setFullName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -13,8 +15,19 @@ const SignUpScreen = () => {
 
   const navigation = useNavigation()
 
-  const onSignUpPressed = () => {
-    navigation.navigate('ConfirmEmail')
+  const onSignUpPressed = async (data) => {
+    const {username, password, email, name} = data;
+    try {
+      const response = await Auth.signUp({
+        username,
+        password,
+        attributes: {email, name, preferred_username: username}
+      });
+      console.log(response);
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+    }
+    // navigation.navigate('ConfirmEmail')
   }
 
   const onSignInPressed = () => {
@@ -34,6 +47,7 @@ const SignUpScreen = () => {
       <View style={styles.root}>
       <Text style={styles.title}>Create Account</Text>
 
+      <CustomInput placeholder='Full Name' value={fullName} setValue={setFullName} />
       <CustomInput placeholder='Username' value={username} setValue={setUsername} />
       <CustomInput placeholder='Email' value={email} setValue={setEmail} />
       <CustomInput placeholder='Password' value={password} setValue={setPassword} secureTextEntry/>
