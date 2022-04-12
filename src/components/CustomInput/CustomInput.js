@@ -1,10 +1,22 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native'
 import React from 'react'
+import { Controller } from 'react-hook-form' 
 
-const CustomInput = ({value, setValue, placeholder, secureTextEntry}) => {
+const CustomInput = ({control, name, placeholder, secureTextEntry}) => {
   return (
     <View style={styles.container}>
-      <TextInput placeholder={placeholder} style={styles.input} value={value} onChange={setValue} secureTextEntry={secureTextEntry} />
+      <Controller 
+        control={control}
+        name={name}
+        render={({field: {value, onChange, onBlur}}) => (
+          <TextInput 
+            value={value}
+            onChangeText={onChange}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            secureTextEntry={secureTextEntry}
+            style={styles.input} />
+        )} />
     </View>
   )
 }
@@ -21,9 +33,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginVertical: 5
     },
-    input: {
-
-    }
+    input: {}
 })
 
 export default CustomInput
