@@ -1,19 +1,19 @@
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Alert } from 'react-native'
+import { View, TextInput, Image, StyleSheet, useWindowDimensions, ScrollView, Alert } from 'react-native'
 import React, {useState} from 'react'
 import Logo from '../../../assets/images/Logo_1.png'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignInButtons from '../../components/SocialSignInButtons'
 import { useNavigation } from '@react-navigation/native'
+import { useForm, Controller } from 'react-hook-form' 
 import {Auth} from 'aws-amplify';
 
 const SignInScreen = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-
   const {height} = useWindowDimensions()
   const navigation = useNavigation()
+
+  const {control, handleSubmit} = useForm()
 
   const onSignInPressed = async (data) => {
     if (loading) {
@@ -28,6 +28,7 @@ const SignInScreen = () => {
       Alert.alert('Oops', error.message);
     }
     setLoading(false)
+    
     // // validate user
 
     // navigation.navigate('Home')
@@ -48,10 +49,24 @@ const SignInScreen = () => {
       <View style={styles.root}>
       <Image source={Logo} style={[styles.logo, {height: height*0.3}]} resizeMode='contain' />
 
-      <CustomInput placeholder='Username' value={username} setValue={setUsername} />
-      <CustomInput placeholder='Password' value={password} setValue={setPassword} secureTextEntry/>
+      {/* <CustomInput placeholder='Username' value={username} setValue={setUsername} />
+      <CustomInput placeholder='Password' value={password} setValue={setPassword} secureTextEntry/> */}
 
-      <CustomButton text={loading ? "Loading..." : "Sign In"} onPress={onSignInPressed} />
+      <Controller 
+        control={control}
+        name="username"
+        render={({field: {value, onChange, onBlur}}) => (
+          <TextInput 
+            placeholder={'username'}
+            value={value}
+            onChangeText={onChange}
+            onBlur={onBlur} />
+        )} 
+      />
+
+      <TextInput placeholder={'password'} />
+
+      <CustomButton text={loading ? "Loading..." : "Sign In"} onPress={handleSubmit(onSignInPressed)} />
       <CustomButton text="Forgot Password?" onPress={onForgotPasswordPressed} type='TERTIARY' />
 
       <SocialSignInButtons />
