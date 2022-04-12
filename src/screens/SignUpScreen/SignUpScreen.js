@@ -18,16 +18,15 @@ const SignUpScreen = () => {
   const onSignUpPressed = async (data) => {
     const {username, password, email, name} = data;
     try {
-      const response = await Auth.signUp({
+      await Auth.signUp({
         username,
         password,
         attributes: {email, name, preferred_username: username}
       });
-      console.log(response);
+      navigation.navigate('ConfirmEmail')
     } catch (error) {
       Alert.alert('Oops', error.message);
     }
-    // navigation.navigate('ConfirmEmail')
   }
 
   const onSignInPressed = () => {

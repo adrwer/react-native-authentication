@@ -1,16 +1,23 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native'
 import React, {useState} from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import { useNavigation } from '@react-navigation/native'
+import {Auth} from 'aws-amplify';
 
 const ConfirmEmailScreen = () => {
   const [code, setCode] = useState('')
+  const [username, setUsername] = useState('')
 
   const navigation = useNavigation()
 
-  const onConfirmEmailPressed = () => {
-    navigation.navigate('Home')
+  const onConfirmEmailPressed = async data => {
+    try {
+      await Auth.confirmSignUp(data.username, data.code);
+      navigation.navigate('Home');
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+    }
   }
 
   const onSignInPressed = () => {
@@ -26,6 +33,7 @@ const ConfirmEmailScreen = () => {
       <View style={styles.root}>
       <Text style={styles.title}>Confirm your email</Text>
 
+      <CustomInput placeholder='Username' value={username} setValue={setUsername} />
       <CustomInput placeholder='Enter your confirmation code' value={code} setValue={setCode} />
 
       <CustomButton text="Confirm Email" onPress={onConfirmEmailPressed} />
