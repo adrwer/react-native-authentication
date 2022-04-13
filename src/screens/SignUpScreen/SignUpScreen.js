@@ -4,16 +4,16 @@ import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import SocialSignInButtons from '../../components/SocialSignInButtons'
 import { useNavigation } from '@react-navigation/native'
+import { useForm } from 'react-hook-form' 
 import {Auth} from 'aws-amplify';
 
-const SignUpScreen = () => {
-  const [fullName, setFullName] = useState('')
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordRepeat, setPasswordRepeat] = useState('')
+const EMAIL_REGEX = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/
 
+const SignUpScreen = () => {
   const navigation = useNavigation()
+  
+  const {control, handleSubmit, watch} = useForm()
+  const pwd = watch('password')
 
   const onSignUpPressed = async (data) => {
     const {username, password, email, name} = data;
@@ -46,13 +46,19 @@ const SignUpScreen = () => {
       <View style={styles.root}>
       <Text style={styles.title}>Create Account</Text>
 
-      <CustomInput placeholder='Full Name' value={fullName} setValue={setFullName} />
-      <CustomInput placeholder='Username' value={username} setValue={setUsername} />
-      <CustomInput placeholder='Email' value={email} setValue={setEmail} />
-      <CustomInput placeholder='Password' value={password} setValue={setPassword} secureTextEntry/>
-      <CustomInput placeholder='Confirm Password' value={passwordRepeat} setValue={setPasswordRepeat} secureTextEntry/>
+      <CustomInput name="fullName" placeholder='Full Name' control={control} rules={{required: 'Full Name is required'}} />
+      <CustomInput name="username" placeholder='Username' control={control} rules={{required: 'Username is required'}} />
+      <CustomInput name="email" placeholder='Email' control={control} 
+        rules={{required: 'Email is required', pattern: {value: EMAIL_REGEX, message:'Email is invalid'}}} 
+      />
+      <CustomInput name="password" placeholder='Password' control={control} secureTextEntry 
+        rules={{required: 'Password is Required', minLength: {value: 4, message: 'Password should exceed 3 characters'}}} 
+      />
+      <CustomInput name="confirmPassword" placeholder='Confirm Password' control={control} secureTextEntry 
+        rules={{required: 'Confirm password is Required', validate: value => value === pwd || 'Passwords do not match'}}
+      />
 
-      <CustomButton text="Sign Up" onPress={onSignUpPressed} />
+      <CustomButton text="Sign Up" onPress={handleSubmit(onSignUpPressed)} />
       <Text style={styles.text}>By registering, you confirm that you accept our <Text style={styles.link} onPress={onTermsOfUsePressed}>Terms of Use</Text> and <Text style={styles.link} onPress={onPrivacyPolicyPressed}>Privacy Policy</Text></Text>
 
       <SocialSignInButtons />
