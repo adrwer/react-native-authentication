@@ -3,13 +3,13 @@ import React, {useState} from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import { useNavigation } from '@react-navigation/native'
+import { useForm } from 'react-hook-form'
 import {Auth} from 'aws-amplify';
 
 const ConfirmEmailScreen = () => {
-  const [code, setCode] = useState('')
-  const [username, setUsername] = useState('')
-
   const navigation = useNavigation()
+
+  const {control, handleSubmit} = useForm()
 
   const onConfirmEmailPressed = async data => {
     try {
@@ -33,10 +33,10 @@ const ConfirmEmailScreen = () => {
       <View style={styles.root}>
       <Text style={styles.title}>Confirm your email</Text>
 
-      <CustomInput placeholder='Username' value={username} setValue={setUsername} />
-      <CustomInput placeholder='Enter your confirmation code' value={code} setValue={setCode} />
+      <CustomInput name="username" placeholder='Username' control={control} rules={{required: 'Username is required'}} />
+      <CustomInput name="code" placeholder='Enter your confirmation code' control={control} rules={{required: 'Confirmation code is required'}} />
 
-      <CustomButton text="Confirm Email" onPress={onConfirmEmailPressed} />
+      <CustomButton text="Confirm Email" onPress={handleSubmit(onConfirmEmailPressed)} />
 
       <CustomButton text="Resend Code" onPress={onResendCodePressed} type='SECONDARY' />
 
