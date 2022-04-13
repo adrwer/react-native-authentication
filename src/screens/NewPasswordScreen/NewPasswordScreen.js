@@ -3,14 +3,15 @@ import React, {useState} from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import { useNavigation } from '@react-navigation/native'
+import { useForm } from 'react-hook-form'
 
 const NewPasswordScreen = () => {
-  const [code, setCode] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-
   const navigation = useNavigation()
 
-  const onSubmitPressed = () => {
+  const {control, handleSubmit} = useForm()
+
+  const onSubmitPasswordPressed = data => {
+    console.warn(data)
     navigation.navigate('SignIn')
   }
 
@@ -23,10 +24,12 @@ const NewPasswordScreen = () => {
       <View style={styles.root}>
       <Text style={styles.title}>Reset your password</Text>
 
-      <CustomInput placeholder='Code' value={code} setValue={setCode} />
-      <CustomInput placeholder='Enter your new password' value={newPassword} setValue={setNewPassword} />
+      <CustomInput name="code" placeholder='Enter your confirmation code' control={control} rules={{required: 'Confirmation code is required'}} />
+      <CustomInput name="newPassword" placeholder=' New Password' control={control} secureTextEntry 
+        rules={{required: 'New Password is Required', minLength: {value: 4, message: 'New Password should exceed 3 characters'}}} 
+      />
 
-      <CustomButton text="Submit " onPress={onSubmitPressed} />
+      <CustomButton text="Submit " onPress={handleSubmit(onSubmitPasswordPressed)} />
 
       <CustomButton text="Back to Sign In" onPress={onSignInPressed} type='TERTIARY' />
     </View>
