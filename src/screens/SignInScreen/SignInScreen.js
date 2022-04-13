@@ -28,10 +28,6 @@ const SignInScreen = () => {
       Alert.alert('Oops', error.message);
     }
     setLoading(false)
-
-    // // validate user
-
-    // navigation.navigate('Home')
   }
 
   const onForgotPasswordPressed = () => {

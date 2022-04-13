@@ -4,17 +4,21 @@ import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
 import { useNavigation } from '@react-navigation/native'
 import { useForm } from 'react-hook-form'
+import { useRoute } from '@react-navigation/native'
 import {Auth} from 'aws-amplify';
 
 const ConfirmEmailScreen = () => {
+  const route = useRoute()
   const navigation = useNavigation()
 
-  const {control, handleSubmit} = useForm()
+  const {control, handleSubmit, watch} = useForm({defaultValues: {username: route?.params?.username}})
+
+  const username = watch('username')
 
   const onConfirmEmailPressed = async data => {
     try {
       await Auth.confirmSignUp(data.username, data.code);
-      navigation.navigate('Home');
+      navigation.navigate('SignIn');
     } catch (error) {
       Alert.alert('Oops', error.message);
     }
@@ -24,8 +28,13 @@ const ConfirmEmailScreen = () => {
     navigation.navigate('SignIn')
   }
 
-  const onResendCodePressed = () => {
-    console.warn('Resend Code')
+  const onResendCodePressed = async () => {
+    try {
+      await Auth.resendSignUp(username);
+      Alert.alert('Success', 'Code was resent to your email!')
+    } catch (error) {
+      Alert.alert('Oops', error.message);
+    }
   }
 
   return (
